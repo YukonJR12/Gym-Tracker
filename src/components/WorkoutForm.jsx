@@ -114,7 +114,9 @@ export default function WorkoutForm({ onSave, onCancel }) {
 
       // Step 2: insert workout row, return id so we can update it with the summary
       setSavingStage('Saving workout…')
+      const { data: { user } } = await supabase.auth.getUser()
       const row = {
+        user_id: user.id,
         workout_date: form.workout_date,
         day_of_week: getDayName(form.workout_date),
         workout_type: form.workout_type,

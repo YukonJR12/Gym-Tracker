@@ -2,16 +2,29 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './supabase'
 import WorkoutForm from './components/WorkoutForm'
 import WorkoutList from './components/WorkoutList'
+import AuthForm from './components/AuthForm'
 import './App.css'
 
 const FILTERS = ['All', 'Push', 'Pull', 'Legs', 'Upper', 'Lower']
 
 export default function App() {
+  const [session, setSession] = useState(undefined) // undefined = loading
   const [workouts, setWorkouts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
+
+  // Listen for auth state changes
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   const fetchWorkouts = useCallback(async () => {
     setLoading(true)
@@ -38,14 +51,35 @@ export default function App() {
   }, [filter])
 
   useEffect(() => {
-    fetchWorkouts()
-  }, [fetchWorkouts])
+    if (session) fetchWorkouts()
+  }, [fetchWorkouts, session])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setWorkouts([])
+    setShowForm(false)
+  }
 
   const handleSave = () => {
     setShowForm(false)
     fetchWorkouts()
   }
 
+  // Still checking auth
+  if (session === undefined) {
+    return (
+      <div className="app-loading">
+        <div className="spinner-lg" />
+      </div>
+    )
+  }
+
+  // Not logged in
+  if (!session) {
+    return <AuthForm />
+  }
+
+  // Logged in
   return (
     <div className="app">
       <header className="header">
@@ -57,12 +91,18 @@ export default function App() {
               <p className="header-sub">Track every rep. Own your progress.</p>
             </div>
           </div>
-          <button
-            className="btn btn-accent"
-            onClick={() => setShowForm(v => !v)}
-          >
-            {showForm ? '✕ Close' : '+ Log Workout'}
-          </button>
+          <div className="header-actions">
+            <span className="header-email">{session.user.email}</span>
+            <button
+              className="btn btn-accent"
+              onClick={() => setShowForm(v => !v)}
+            >
+              {showForm ? '✕ Close' : '+ Log Workout'}
+            </button>
+            <button className="btn btn-ghost" onClick={handleLogout}>
+              Log out
+            </button>
+          </div>
         </div>
       </header>
 
