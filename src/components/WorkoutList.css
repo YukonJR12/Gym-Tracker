@@ -1,0 +1,189 @@
+.workout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── Date group ── */
+.date-group {}
+
+.date-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.date-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.date-type {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Workout card ── */
+.workout-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.workout-card:hover {
+  border-color: #3a3a3a;
+}
+
+.card-left {
+  width: 4px;
+  flex-shrink: 0;
+  background: currentColor;
+  border-left: 4px solid;
+}
+
+.card-body {
+  flex: 1;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.card-exercise {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.card-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.stat-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.stat-sep {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.card-notes {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  background: var(--surface-2);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+/* ── Progress photo ── */
+.card-photo-wrap {
+  margin-top: 4px;
+}
+
+.card-photo {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: block;
+}
+
+/* ── States ── */
+.list-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.state-icon {
+  font-size: 40px;
+}
+
+.state-text {
+  font-size: 15px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.state-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.list-error .state-text {
+  color: var(--error);
+}
+
+/* ── Spinner ── */
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
