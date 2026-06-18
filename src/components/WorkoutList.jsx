@@ -62,6 +62,9 @@ function WorkoutCard({ workout }) {
         {workout.notes && (
           <p className="card-notes">💬 {workout.notes}</p>
         )}
+        {workout.motivational_summary && (
+          <p className="card-summary">🏆 {workout.motivational_summary}</p>
+        )}
         {workout.photo_url && (
           <div className="card-photo-wrap">
             <img

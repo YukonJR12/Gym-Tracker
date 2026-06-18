@@ -130,6 +130,17 @@
   line-height: 1.4;
 }
 
+.card-summary {
+  font-size: 13px;
+  color: var(--text);
+  padding: 8px 12px;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 6px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
 /* ── Progress photo ── */
 .card-photo-wrap {
   margin-top: 4px;
