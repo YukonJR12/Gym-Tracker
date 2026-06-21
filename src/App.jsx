@@ -4,9 +4,14 @@ import WorkoutForm from './components/WorkoutForm'
 import WorkoutList from './components/WorkoutList'
 import AuthForm from './components/AuthForm'
 import CoachingPlan from './components/CoachingPlan'
+import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentError from './pages/PaymentError'
 import './App.css'
 
 const FILTERS = ['All', 'Push', 'Pull', 'Legs', 'Upper', 'Lower']
+
+// Simple path-based routing without a router library
+const PATH = window.location.pathname
 
 export default function App() {
   const [session, setSession] = useState(undefined) // undefined = loading
@@ -16,7 +21,6 @@ export default function App() {
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
 
-  // Listen for auth state changes
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -66,7 +70,11 @@ export default function App() {
     fetchWorkouts()
   }
 
-  // Still checking auth
+  // Payment result pages — no auth required, shown regardless of session
+  if (PATH === '/success') return <PaymentSuccess />
+  if (PATH === '/error')   return <PaymentError />
+
+  // Auth loading
   if (session === undefined) {
     return (
       <div className="app-loading">
@@ -76,11 +84,9 @@ export default function App() {
   }
 
   // Not logged in
-  if (!session) {
-    return <AuthForm />
-  }
+  if (!session) return <AuthForm />
 
-  // Logged in
+  // Logged in — main dashboard
   return (
     <div className="app">
       <header className="header">
@@ -108,7 +114,7 @@ export default function App() {
       </header>
 
       <main className="main">
-        <CoachingPlan />
+        <CoachingPlan session={session} />
 
         {showForm && (
           <section className="form-section">

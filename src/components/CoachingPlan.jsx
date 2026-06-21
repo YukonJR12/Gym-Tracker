@@ -1,22 +1,49 @@
 import { useState } from 'react'
+import { supabase, PAYMENT_EDGE_URL } from '../supabase'
 import './CoachingPlan.css'
 
-export default function CoachingPlan() {
+export default function CoachingPlan({ session }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   const handlePayment = async () => {
     setError(null)
     setLoading(true)
+
     try {
-      // Edge Function call goes here in the next step
-      // const res = await fetch(PAYMENT_EDGE_FUNCTION_URL, { ... })
-      throw new Error('Payment gateway not connected yet.')
+      // Get the current auth token so the Edge Function can verify the request
+      const { data: { session: currentSession } } = await supabase.auth.getSession()
+      const token = currentSession?.access_token
+
+      const res = await fetch(PAYMENT_EDGE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          amount: 1.000,
+          customerName: session.user.email,
+          customerEmail: session.user.email,
+          itemName: 'Coaching Plan',
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || !data.paymentUrl) {
+        throw new Error(data.error || 'Failed to start payment. Please try again.')
+      }
+
+      // Redirect the browser to MyFatoorah hosted checkout
+      window.location.href = data.paymentUrl
+
     } catch (err) {
       setError(err.message)
-    } finally {
       setLoading(false)
     }
+    // Note: setLoading(false) intentionally omitted on success —
+    // the page is navigating away so we keep the spinner until redirect.
   }
 
   return (
@@ -52,7 +79,7 @@ export default function CoachingPlan() {
           {loading ? (
             <>
               <span className="coaching-spinner" />
-              Processing…
+              Redirecting…
             </>
           ) : (
             'Get My Coaching Plan'
