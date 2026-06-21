@@ -3,6 +3,7 @@ import { supabase } from './supabase'
 import WorkoutForm from './components/WorkoutForm'
 import WorkoutList from './components/WorkoutList'
 import AuthForm from './components/AuthForm'
+import CoachingPlan from './components/CoachingPlan'
 import './App.css'
 
 const FILTERS = ['All', 'Push', 'Pull', 'Legs', 'Upper', 'Lower']
@@ -107,6 +108,8 @@ export default function App() {
       </header>
 
       <main className="main">
+        <CoachingPlan />
+
         {showForm && (
           <section className="form-section">
             <WorkoutForm onSave={handleSave} onCancel={() => setShowForm(false)} />
